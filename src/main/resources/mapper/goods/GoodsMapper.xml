@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cy.pj.goods.dao.GoodsDao">
+
+    <delete id="deleteByIds2">
+        delete from tb_goods
+        <where>
+        <if test="ids !=null and ids.length>0">
+            id in
+        <foreach collection="ids" separator="," open="(" close=")" item="id">
+            #{id}
+        </foreach>
+        </if>
+            or 1=2
+        </where>
+    </delete>
+
+    <delete id="deleteByIds">
+        delete from tb_goods
+        <where>
+            <choose>
+                <when test="ids!=null and ids.length>0">
+                    id in
+                    <foreach collection="ids" separator="," open="(" close=")" item="id">
+                        #{id}
+                    </foreach>
+                </when>
+                <otherwise>
+                    or 1=2
+                </otherwise>
+            </choose>
+        </where>
+    </delete>
+
+    <!--没有给定resultType值出现的错误。resultType是查询对象的类型。-->
+    <select id="selectByIds" resultType="com.cy.pj.goods.pojo.Goods">
+    select * from tb_goods where id in
+    <foreach collection="ids" separator="," open="(" close=")" item="id">
+        #{id}
+    </foreach>
+    </select>
+
+
+    <update id="updateByIds">
+        update tb_goods set name=#{name},remark=#{remark}
+        where id in
+        <foreach collection="ids" separator="," open="(" close=")" item="id">
+            #{id}
+        </foreach>
+    </update>
+</mapper>
